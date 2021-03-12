@@ -5,9 +5,11 @@
         <item>Вторая</item>
         <item>Третья</item>
         <item>Четвертая</item>
+        <item>Пятая</item>
     </string-array>
 
     <string-array name="note_text">
+        <item>Текст первой заметки</item>
         <item>Текст второй заметки</item>
         <item>Текст третьей заметки</item>
         <item>Текст четвёртой заметки</item>
@@ -19,11 +21,13 @@
         <item>2021</item>
         <item>2021</item>
         <item>2021</item>
+        <item>2021</item>
     </integer-array>
 
     <integer-array name="date_month">
         <item>1</item>
         <item>1</item>
+        <item>2</item>
         <item>2</item>
         <item>3</item>
     </integer-array>
@@ -32,6 +36,7 @@
         <item>15</item>
         <item>17</item>
         <item>20</item>
+        <item>7</item>
         <item>11</item>
     </integer-array>
 
