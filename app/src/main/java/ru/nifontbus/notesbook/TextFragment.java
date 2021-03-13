@@ -47,7 +47,7 @@ public class TextFragment extends Fragment {
         // Таким способом можно получить головной элемент из макета
         View view = inflater.inflate(R.layout.fragment_text, container, false);
 
-        // найти в контейнере элемент для вывода текста
+        // находим в контейнере элементы
         TextView tvName = view.findViewById(R.id.nameNote);
         TextView tvText = view.findViewById(R.id.textNote);
 

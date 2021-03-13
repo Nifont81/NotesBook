@@ -18,10 +18,9 @@ import android.widget.TextView;
 
 public class NameFragment extends Fragment {
 
-    public static final String CURRENT_NOTE = "CurrentNote";
-    //private int currentPosition = 0;
     private Note currentNote;
 
+    public static final String CURRENT_NOTE = "CurrentNote";
     private boolean isLandscape;
 
     public NameFragment() {
@@ -63,7 +62,6 @@ public class NameFragment extends Fragment {
 
             final int fi = i;
             tv.setOnClickListener(v -> {
-                //currentPosition = fi;
                 currentNote = new Note(fi, getResources().getStringArray(R.array.note_names)[fi],
                         getResources().getStringArray(R.array.note_text)[fi]);
                 showTextNote(currentNote);
@@ -117,10 +115,15 @@ public class NameFragment extends Fragment {
 
         // Выполняем транзакцию по замене фрагмента
         FragmentManager fragmentManager = requireActivity().getSupportFragmentManager();
-        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-        fragmentTransaction.replace(R.id.textNote, detail);  // замена фрагмента
-        fragmentTransaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
-        fragmentTransaction.commit();
+//        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+//        fragmentTransaction.replace(R.id.textNote, detail);  // замена фрагмента
+//        fragmentTransaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
+//        fragmentTransaction.commit();
+
+        fragmentManager.beginTransaction()
+                .replace(R.id.textNote, detail)  // замена фрагмента
+                .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE)
+                .commit();
     }
 
 
