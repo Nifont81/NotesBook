@@ -1,6 +1,5 @@
 package ru.nifontbus.notesbook;
 
-import android.content.res.TypedArray;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
@@ -17,21 +16,18 @@ import android.widget.TextView;
  */
 public class TextFragment extends Fragment {
 
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    public static final String ARG_INDEX = "text_fragment_id";
+    public static final String ARG_NOTE = "text_fragment_id";
 
-    // TODO: Rename and change types of parameters
-    private int index;
+    private Note note;
 
     public TextFragment() {
         // Required empty public constructor
     }
 
-     public static TextFragment newInstance(int index) {
+    public static TextFragment newInstance(Note note) {
         TextFragment fragment = new TextFragment();
         Bundle args = new Bundle();
-        args.putInt(ARG_INDEX, index);
+        args.putParcelable(ARG_NOTE, note);
         fragment.setArguments(args);
         return fragment;
     }
@@ -40,7 +36,7 @@ public class TextFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
-            index = getArguments().getInt(ARG_INDEX);
+            note = getArguments().getParcelable(ARG_NOTE);
         }
     }
 
@@ -50,15 +46,13 @@ public class TextFragment extends Fragment {
 
         // Таким способом можно получить головной элемент из макета
         View view = inflater.inflate(R.layout.fragment_text, container, false);
-        // найти в контейнере элемент для вывода текста
-        TextView textView = view.findViewById(R.id.textNote);
-        textView.setTextSize(30);
-        // Получить из ресурсов массив текстов заметок
-        //TypedArray texts = getResources().obtainTypedArray(R.array.note_text);
 
-        String[] noteTexts = getResources().getStringArray(R.array.note_text);
-        // Выбрать по индексу подходящий
-        textView.setText(noteTexts[index]);
+        // найти в контейнере элемент для вывода текста
+        TextView tvName = view.findViewById(R.id.nameNote);
+        TextView tvText = view.findViewById(R.id.textNote);
+
+        tvName.setText(note.getName());
+        tvText.setText(note.getText());
         return view;
 
     }

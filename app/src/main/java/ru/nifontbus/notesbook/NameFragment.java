@@ -19,7 +19,9 @@ import android.widget.TextView;
 public class NameFragment extends Fragment {
 
     public static final String CURRENT_NOTE = "CurrentNote";
-    private int currentPosition = 0;
+    //private int currentPosition = 0;
+    private Note currentNote;
+
     private boolean isLandscape;
 
     public NameFragment() {
@@ -61,8 +63,10 @@ public class NameFragment extends Fragment {
 
             final int fi = i;
             tv.setOnClickListener(v -> {
-                currentPosition = fi;
-                showTextNote(currentPosition);
+                //currentPosition = fi;
+                currentNote = new Note(fi, getResources().getStringArray(R.array.note_names)[fi],
+                        getResources().getStringArray(R.array.note_text)[fi]);
+                showTextNote(currentNote);
             });
 
         }
@@ -71,7 +75,7 @@ public class NameFragment extends Fragment {
     // Сохраним текущую позицию (вызывается перед выходом из фрагмента)
     @Override
     public void onSaveInstanceState(@NonNull Bundle outState) {
-        outState.putInt(CURRENT_NOTE, currentPosition);
+        outState.putParcelable(CURRENT_NOTE, currentNote);
         super.onSaveInstanceState(outState);
     }
 
@@ -87,29 +91,29 @@ public class NameFragment extends Fragment {
         // Если это не первое создание, то восстановим текущую позицию
         if (savedInstanceState != null) {
             // Восстановление текущей позиции.
-            currentPosition = savedInstanceState.getInt(CURRENT_NOTE, 0);
+            currentNote = savedInstanceState.getParcelable(CURRENT_NOTE);
         }
 
 
         // Если можно нарисовать рядом второй фрагмент, то сделаем это
         if (isLandscape) {
-            showLandTextNote(0);
+            showLandTextNote(currentNote);
         }
     }
 
 
-    private void showTextNote(int index) {
+    private void showTextNote(Note currentNote) {
         if (isLandscape) {
-            showLandTextNote(index);
+            showLandTextNote(currentNote);
         } else {
-            showPortTextNote(index);
+            showPortTextNote(currentNote);
         }
     }
 
-    // Показать герб в ландшафтной ориентации
-    private void showLandTextNote(int index) {
-        // Создаём новый фрагмент с текущей позицией для вывода герба
-        TextFragment detail = TextFragment.newInstance(index);
+    // Показать содержимое заметки в ландшафтной ориентации
+    private void showLandTextNote(Note currentNote) {
+        // Создаём новый фрагмент с текущей позицией для вывода заметки
+        TextFragment detail = TextFragment.newInstance(currentNote);
 
         // Выполняем транзакцию по замене фрагмента
         FragmentManager fragmentManager = requireActivity().getSupportFragmentManager();
@@ -120,13 +124,13 @@ public class NameFragment extends Fragment {
     }
 
 
-    private void showPortTextNote(int index) {
+    private void showPortTextNote(Note currentNote) {
         // Откроем вторую activity
         Intent intent = new Intent();
         intent.setClass(getActivity(), TextActivity.class);
 
         // и передадим туда параметры
-        intent.putExtra(TextFragment.ARG_INDEX, index);
+        intent.putExtra(TextFragment.ARG_NOTE, currentNote);
         startActivity(intent);
     }
 
