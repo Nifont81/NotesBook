@@ -21,8 +21,13 @@ public class TextActivity extends AppCompatActivity {
         if (savedInstanceState == null) {
             // Если эта activity запускается первый раз (с каждой новой заметкой первый раз),
             // то перенаправим параметр фрагменту
-            TextFragment details = new TextFragment();
-            details.setArguments(getIntent().getExtras());
+
+            TextFragment details = TextFragment.newInstance(getIntent()
+                    .getParcelableExtra(TextFragment.ARG_NOTE));
+
+/*//          тоже, но так быстрее (как в методичке):
+            TextFragment details = (new TextFragment());
+            details.setArguments(getIntent().getExtras());*/
 
             // Добавим фрагмент на activity
             getSupportFragmentManager()
@@ -30,7 +35,5 @@ public class TextActivity extends AppCompatActivity {
                     .replace(R.id.text_fragment_container, details)
                     .commit();
         }
-
-
     }
 }

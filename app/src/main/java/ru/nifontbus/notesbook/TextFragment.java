@@ -9,14 +9,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-/**
- * A simple {@link Fragment} subclass.
- * Use the {@link TextFragment#newInstance} factory method to
- * create an instance of this fragment.
- */
 public class TextFragment extends Fragment {
 
-    public static final String ARG_NOTE = "text_fragment_id";
+    public static final String ARG_NOTE = "text_fragment_obj";
 
     private Note note;
 

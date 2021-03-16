@@ -62,11 +62,11 @@ public class NameFragment extends Fragment {
 
             final int fi = i;
             tv.setOnClickListener(v -> {
-                currentNote = new Note(fi, getResources().getStringArray(R.array.note_names)[fi],
+                currentNote = new Note(fi,
+                        getResources().getStringArray(R.array.note_names)[fi],
                         getResources().getStringArray(R.array.note_text)[fi]);
                 showTextNote(currentNote);
             });
-
         }
     }
 
@@ -92,13 +92,11 @@ public class NameFragment extends Fragment {
             currentNote = savedInstanceState.getParcelable(CURRENT_NOTE);
         }
 
-
         // Если можно нарисовать рядом второй фрагмент, то сделаем это
         if (isLandscape) {
             showLandTextNote(currentNote);
         }
     }
-
 
     private void showTextNote(Note currentNote) {
         if (isLandscape) {
@@ -110,31 +108,40 @@ public class NameFragment extends Fragment {
 
     // Показать содержимое заметки в ландшафтной ориентации
     private void showLandTextNote(Note currentNote) {
-        // Создаём новый фрагмент с текущей позицией для вывода заметки
+/*
+//         Создаём новый фрагмент с текущей позицией для вывода заметки
         TextFragment detail = TextFragment.newInstance(currentNote);
 
-        // Выполняем транзакцию по замене фрагмента
+//         Выполняем транзакцию по замене фрагмента
         FragmentManager fragmentManager = requireActivity().getSupportFragmentManager();
-//        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-//        fragmentTransaction.replace(R.id.textNote, detail);  // замена фрагмента
-//        fragmentTransaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
-//        fragmentTransaction.commit();
+        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+        fragmentTransaction.replace(R.id.textNote, detail);  // замена фрагмента
+        fragmentTransaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
+        fragmentTransaction.commit();
+*/
 
-        fragmentManager.beginTransaction()
-                .replace(R.id.textNote, detail)  // замена фрагмента
+        requireActivity().getSupportFragmentManager()
+                .beginTransaction()
+                .replace(R.id.textNote, TextFragment.newInstance(currentNote))  // замена фрагмента
                 .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE)
                 .commit();
     }
 
-
     private void showPortTextNote(Note currentNote) {
-        // Откроем вторую activity
-        Intent intent = new Intent();
-        intent.setClass(getActivity(), TextActivity.class);
+ /*       // Откроем вторую activity
+        Intent intent = new Intent()
+                .setClass(getActivity(), TextActivity.class)
+                .putExtra(TextFragment.ARG_NOTE, currentNote); // и передадим туда параметры
 
-        // и передадим туда параметры
-        intent.putExtra(TextFragment.ARG_NOTE, currentNote);
-        startActivity(intent);
+        startActivity(intent);*/
+
+        TextFragment details = TextFragment.newInstance(currentNote);
+
+        // Добавим фрагмент на activity
+        requireActivity().getSupportFragmentManager()
+                .beginTransaction()
+                .replace(R.id.text_fragment_container, details)
+                .addToBackStack(null)
+                .commit();
     }
-
 }
