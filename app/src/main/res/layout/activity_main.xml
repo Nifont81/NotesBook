@@ -8,7 +8,7 @@
 
  <fragment
      android:id="@+id/notes_container"
-     android:name="ru.nifontbus.notesbook.NotesFragment"
+     android:name="ru.nifontbus.notesbook.NameFragment"
      android:layout_width="match_parent"
      android:layout_height="match_parent"/>
 
