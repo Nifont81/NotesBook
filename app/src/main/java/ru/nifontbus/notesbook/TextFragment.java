@@ -4,6 +4,7 @@ import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,9 +12,8 @@ import android.widget.TextView;
 
 public class TextFragment extends Fragment {
 
-    public static final String ARG_NOTE = "text_fragment_obj";
-
-    private Note note;
+    public static final String ARG_NOTE = "TextCurrentNote";
+    private Note currentNote;
 
     public TextFragment() {
         // Required empty public constructor
@@ -30,8 +30,10 @@ public class TextFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setRetainInstance(false);
+
         if (getArguments() != null) {
-            note = getArguments().getParcelable(ARG_NOTE);
+            currentNote = getArguments().getParcelable(ARG_NOTE);
         }
     }
 
@@ -45,9 +47,8 @@ public class TextFragment extends Fragment {
         // находим в контейнере элементы
         TextView tvName = view.findViewById(R.id.nameNote);
         TextView tvText = view.findViewById(R.id.textNote);
-
-        tvName.setText(note.getName());
-        tvText.setText(note.getText());
+        tvName.setText(currentNote.getName());
+        tvText.setText(currentNote.getText());
         return view;
 
     }
