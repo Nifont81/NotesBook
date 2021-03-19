@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Блокнот</string>
+
+    <string name="text_name">Название заметки</string>
+    <string name="text_note">Текст заметки</string>
+    <string name="tm_add">Добавить</string>
+    <string name="tm_search">Поиск</string>
+    <string name="tm_del">Удалить</string>
+    <string name="tm_change_view">Изменить вид</string>
+    <string name="tm_about">О программе...</string>
+    <string name="ftm_share">Поделиться</string>
+
+    <!--    Боковое навигационное меню-->
+    <string name="fragment_navigation">Навигация</string>
+
+    <string name="settings">Настройки</string>
+    <string name="main">Основное</string>
+    <string name="favorite">Избранное</string>
+
+</resources>
