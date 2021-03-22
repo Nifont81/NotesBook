@@ -1,5 +1,6 @@
 package ru.nifontbus.notesbook;
 
+import android.content.Context;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -12,18 +13,19 @@ import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
-public class TextFragment extends Fragment {
+public class DescriptionFragment extends Fragment {
 
     public static final String ARG_NOTE = "TextCurrentNote";
     private Note currentNote;
 
-    public TextFragment() {
+    public DescriptionFragment() {
         // Required empty public constructor
     }
 
-    public static TextFragment newInstance(Note note) {
-        TextFragment fragment = new TextFragment();
+    public static DescriptionFragment newInstance(Note note) {
+        DescriptionFragment fragment = new DescriptionFragment();
         Bundle args = new Bundle();
         args.putParcelable(ARG_NOTE, note);
         fragment.setArguments(args);
@@ -45,13 +47,13 @@ public class TextFragment extends Fragment {
                              Bundle savedInstanceState) {
 
         // Таким способом можно получить головной элемент из макета
-        View view = inflater.inflate(R.layout.fragment_text, container, false);
+        View view = inflater.inflate(R.layout.fragment_description, container, false);
         setHasOptionsMenu(true);
         // находим в контейнере элементы
         TextView tvName = view.findViewById(R.id.nameNote);
         TextView tvText = view.findViewById(R.id.textNote);
-        tvName.setText(currentNote.getName());
-        tvText.setText(currentNote.getText());
+        tvName.setText(currentNote.getTitle());
+        tvText.setText(currentNote.getDescription());
         return view;
     }
 
@@ -59,5 +61,10 @@ public class TextFragment extends Fragment {
     public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater inflater) {
         super.onCreateOptionsMenu(menu, inflater);
         inflater.inflate(R.menu.fragment_text_menu, menu);
+    }
+
+    private void msg(String message) {
+        Log.d("my", "msg: " + message);
+        Toast.makeText(getContext(), message, Toast.LENGTH_SHORT).show();
     }
 }

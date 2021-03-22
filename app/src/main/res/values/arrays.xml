@@ -1,14 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string-array name="note_names">
+    <string-array name="note_titles">
         <item>Стих Пушкина</item>
         <item>Вторая</item>
         <item>Третья</item>
         <item>Четвертая</item>
         <item>Пятая</item>
-    </string-array>
+        <item>6</item>
+        <item>7</item>
+     </string-array>
 
-    <string-array name="note_text">
+    <string-array name="note_descriptions">
         <item>
         Мороз и солнце; день чудесный!\n
         Еще ты дремлешь, друг прелестный —\n
@@ -38,10 +40,12 @@
         Но знаешь: не велеть ли в санки\n
         Кобылку бурую запречь?
         </item>
-        <item>Текст второй заметки</item>
-        <item>Текст третьей заметки</item>
-        <item>Текст четвёртой заметки</item>
-        <item>Текст пятой заметки</item>
+        <item>Текст 2 заметки</item>
+        <item>Текст 3 заметки</item>
+        <item>Текст 4 заметки</item>
+        <item>Текст 5 заметки</item>
+        <item>Текст 6 заметки</item>
+        <item>Текст 7 заметки</item>
     </string-array>
 
     <integer-array name="date_year">

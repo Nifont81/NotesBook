@@ -3,25 +3,23 @@ package ru.nifontbus.notesbook;
 import android.os.Parcel;
 import android.os.Parcelable;
 
-import java.time.LocalDate;
-
 public class Note implements Parcelable {
     private int id;
-    private String name;
-    private String text;
+    private String title;
+    private String description;
     //private LocalDate date;
 
-    public Note(int id, String name, String text) {
-        this.name = name;
-        this.text = text;
+    public Note(int id, String title, String description) {
+        this.title = title;
+        this.description = description;
         //this.date = date;
     }
 
 
     protected Note(Parcel in) {
         id = in.readInt();
-        name = in.readString();
-        text = in.readString();
+        title = in.readString();
+        description = in.readString();
     }
 
     public static final Creator<Note> CREATOR = new Creator<Note>() {
@@ -36,12 +34,12 @@ public class Note implements Parcelable {
         }
     };
 
-    public String getName() {
-        return name;
+    public String getTitle() {
+        return title;
     }
 
-    public String getText() {
-        return text;
+    public String getDescription() {
+        return description;
     }
 
 //    public LocalDate getDate() {
@@ -56,7 +54,7 @@ public class Note implements Parcelable {
     @Override
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeInt(id);
-        dest.writeString(name);
-        dest.writeString(text);
+        dest.writeString(title);
+        dest.writeString(description);
     }
 }

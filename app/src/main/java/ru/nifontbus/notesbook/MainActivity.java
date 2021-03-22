@@ -7,6 +7,8 @@ import androidx.appcompat.widget.SearchView;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
 import android.annotation.SuppressLint;
@@ -19,7 +21,9 @@ import android.widget.Toast;
 
 import com.google.android.material.navigation.NavigationView;
 
-public class MainActivity extends AppCompatActivity implements OnFragmentSendDataListener {
+import java.util.List;
+
+public class MainActivity extends AppCompatActivity implements fragmentSendDataListener {
 
     private Note currentNote;
     public static final String CURRENT_NOTE = "MainCurrentNote";
@@ -36,20 +40,17 @@ public class MainActivity extends AppCompatActivity implements OnFragmentSendDat
         if (savedInstanceState != null) {
             currentNote = savedInstanceState.getParcelable(CURRENT_NOTE);
         } else {
-            currentNote = new Note(0, "Не задано", "");
+            currentNote = new Note(-1, "...", "");
         }
-
-        msg("onCreate: MAIN : note = " + currentNote.getName());
 
         isLandscape = getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE;
 
-        getSupportFragmentManager().beginTransaction()
-                .replace(R.id.notes_container, new NameFragment())
-                .commit();
+            getSupportFragmentManager().beginTransaction()
+                    .replace(R.id.notes_container, new TitleFragment())
+                    .commit();
 
-        if (isLandscape) {
-            msg("onActivityCreated: NFRAG: isLandscape show note: " + currentNote);
-            showLandTextNote(currentNote);
+        if (isLandscape && currentNote != null) {
+            showLandDetailNote(currentNote);
         }
     }
 
@@ -57,34 +58,32 @@ public class MainActivity extends AppCompatActivity implements OnFragmentSendDat
     protected void onSaveInstanceState(@NonNull Bundle outState) {
         outState.putParcelable(CURRENT_NOTE, currentNote);
         super.onSaveInstanceState(outState);
-        msg("onSaveInstanceState: MAIN Note = " + currentNote.getName());
     }
 
     @Override
-    public void showTextNote(Note note) {
+    public void showDetailNote(Note note) {
         currentNote = note;
         if (isLandscape) {
-            showLandTextNote(note);
+            showLandDetailNote(note);
         } else {
-            showPortTextNote(note);
+            showPortDetailNote(note);
         }
     }
 
     // Показать содержимое заметки в ландшафтной ориентации
-    public void showLandTextNote(Note note) {
+    public void showLandDetailNote(Note note) {
+
         getSupportFragmentManager()
                 .beginTransaction()
-                .replace(R.id.textNote, TextFragment.newInstance(note))  // замена фрагмента
+                .replace(R.id.textNote, DescriptionFragment.newInstance(note))  // замена фрагмента
                 .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE)
-                .addToBackStack(null)
                 .commit();
     }
 
-    public void showPortTextNote(Note note) {
-
+    public void showPortDetailNote(Note note) {
         getSupportFragmentManager()
                 .beginTransaction()
-                .replace(R.id.notes_container, TextFragment.newInstance(note))
+                .replace(R.id.notes_container, DescriptionFragment.newInstance(note))
                 .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE)
                 .addToBackStack(null)
                 .commit();
@@ -92,6 +91,7 @@ public class MainActivity extends AppCompatActivity implements OnFragmentSendDat
 
     /**
      * Обработка бокового навигационного меню
+     *
      * @param id
      * @return
      */
@@ -105,7 +105,11 @@ public class MainActivity extends AppCompatActivity implements OnFragmentSendDat
                 msg("Основное");
                 return true;
             case R.id.action_favorite:
-                msg("Избранное");
+                FragmentManager fm = getSupportFragmentManager();
+                List<Fragment> fragments = fm.getFragments();
+                for (Fragment fragment : fragments) {
+                    msg("frament :" + fragment.getClass());
+                }
                 return true;
             case R.id.action_about:
                 msg("О программе...");
@@ -116,6 +120,7 @@ public class MainActivity extends AppCompatActivity implements OnFragmentSendDat
 
     /**
      * Обработка верхнего меню
+     *
      * @param item
      * @return
      */
@@ -141,9 +146,10 @@ public class MainActivity extends AppCompatActivity implements OnFragmentSendDat
 
     /**
      * Поиск элемента
+     *
      * @param query - строка поиска
      */
-    private void findAction(String query){
+    private void findAction(String query) {
         msg("Поиск " + query);
     }
 
@@ -167,7 +173,7 @@ public class MainActivity extends AppCompatActivity implements OnFragmentSendDat
         NavigationView navigationView = findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(item -> {
             int id = item.getItemId();
-            if (navigateFragment(id)){
+            if (navigateFragment(id)) {
                 drawer.closeDrawer(GravityCompat.START);
                 return true;
             }
