@@ -16,6 +16,6 @@
 
     <string name="settings">Настройки</string>
     <string name="main">Основное</string>
-    <string name="favorite">Избранное</string>
+    <string name="favorite">Избранное (фрагменты)</string>
 
 </resources>
