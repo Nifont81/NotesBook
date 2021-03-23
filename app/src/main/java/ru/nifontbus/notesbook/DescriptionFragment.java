@@ -1,6 +1,5 @@
 package ru.nifontbus.notesbook;
 
-import android.content.Context;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -60,7 +59,7 @@ public class DescriptionFragment extends Fragment {
     @Override
     public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater inflater) {
         super.onCreateOptionsMenu(menu, inflater);
-        inflater.inflate(R.menu.fragment_text_menu, menu);
+        inflater.inflate(R.menu.description_menu, menu);
     }
 
     private void msg(String message) {

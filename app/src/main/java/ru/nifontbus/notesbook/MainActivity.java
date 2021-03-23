@@ -118,41 +118,6 @@ public class MainActivity extends AppCompatActivity implements fragmentSendDataL
         return false;
     }
 
-    /**
-     * Обработка верхнего меню
-     *
-     * @param item
-     * @return
-     */
-    @SuppressLint("NonConstantResourceId")
-    @Override
-    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-        switch (item.getItemId()) {
-            case R.id.toolbar_menu_add:
-                msg("Добавить элемент");
-                break;
-            case R.id.toolbar_menu_search:
-                msg("Поиск");
-                break;
-            case R.id.toolbar_menu_delete:
-                msg("Удалить элемент");
-                break;
-            case R.id.toolbar_menu_view:
-                msg("Изменить вид");
-                break;
-        }
-        return super.onOptionsItemSelected(item);
-    }
-
-    /**
-     * Поиск элемента
-     *
-     * @param query - строка поиска
-     */
-    private void findAction(String query) {
-        msg("Поиск " + query);
-    }
-
     private Toolbar initToolbar() {
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -179,32 +144,6 @@ public class MainActivity extends AppCompatActivity implements fragmentSendDataL
             }
             return false;
         });
-    }
-
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.toolbar_menu, menu);
-
-        MenuItem search = menu.findItem(R.id.toolbar_menu_search); // поиск пункта меню поиска
-        SearchView searchText = (SearchView) search.getActionView(); // строка поиска
-
-        searchText.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
-            // реагирует на конец ввода поиска
-            @Override
-            public boolean onQueryTextSubmit(String query) {
-                findAction(query);
-                return true;
-            }
-
-            // реагирует на нажатие каждой клавиши
-            @Override
-            public boolean onQueryTextChange(String newText) {
-                return true;
-            }
-        });
-
-        return true;
     }
 
     private void msg(String message) {

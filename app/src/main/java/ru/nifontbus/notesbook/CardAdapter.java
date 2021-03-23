@@ -8,26 +8,30 @@ import android.widget.CheckBox;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.RecyclerView;
 
-public class ViewHolderCardAdapter
-        extends RecyclerView.Adapter<ViewHolderCardAdapter.ViewHolder> {
+public class CardAdapter
+        extends RecyclerView.Adapter<CardAdapter.ViewHolder> {
 
     private final static String TAG = "Card Adapter";
     private CardsSource dataSource;
+    private final Fragment fragment;
     private fragmentSendDataListener itemClickListener;
+    private int menuPosition;
 
     // Передаём в конструктор источник данных
     // В нашем случае это массив, но может быть и запрос к БД
-    public ViewHolderCardAdapter(CardsSource dataSource) {
+    public CardAdapter(CardsSource dataSource, Fragment fragment) {
         this.dataSource = dataSource;
+        this.fragment = fragment;
     }
 
     // Создать новый элемент пользовательского интерфейса
     // Запускается менеджером
     @NonNull
     @Override
-    public ViewHolderCardAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int i) {
+    public CardAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int i) {
         // Создаём новый элемент пользовательского интерфейса
         // через Inflater
         View v = LayoutInflater.from(viewGroup.getContext())
@@ -40,7 +44,7 @@ public class ViewHolderCardAdapter
     // Заменить данные в пользовательском интерфейсе
     // Вызывается менеджером
     @Override
-    public void onBindViewHolder(@NonNull ViewHolderCardAdapter.ViewHolder viewHolder, int position) {
+    public void onBindViewHolder(@NonNull CardAdapter.ViewHolder viewHolder, int position) {
         // Получить элемент из источника данных (БД, интернет...)
         // Вынести на экран используя ViewHolder
         viewHolder.setData(dataSource.getCardData(position));
@@ -83,6 +87,27 @@ public class ViewHolderCardAdapter
             title = itemView.findViewById(R.id.title);
             description = itemView.findViewById(R.id.description);
             like = itemView.findViewById(R.id.like);
+
+            registerContextMenu(itemView);
+
+            // Обработчик нажатий на заголовке
+            title.setOnLongClickListener(v -> {
+                menuPosition = getLayoutPosition();
+                itemView.showContextMenu(10, 10);
+                return true;
+            });
+
+        }
+
+        private void registerContextMenu(@NonNull View itemView) {
+            if (fragment != null){
+                itemView.setOnLongClickListener(v -> {
+                    menuPosition = getLayoutPosition();
+                    return false;
+                });
+
+                fragment.registerForContextMenu(itemView);
+            }
         }
 
         public void setData(CardData cardData) {
@@ -94,4 +119,9 @@ public class ViewHolderCardAdapter
             like.setChecked(cardData.isLike());
         }
     }
+
+    public int getMenuPosition() {
+        return menuPosition;
+    }
+
 }

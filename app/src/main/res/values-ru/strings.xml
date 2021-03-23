@@ -7,7 +7,7 @@
     <string name="tm_add">Добавить</string>
     <string name="tm_search">Поиск</string>
     <string name="tm_del">Удалить</string>
-    <string name="tm_change_view">Изменить вид</string>
+    <string name="tm_change_view">Очистить всё</string>
     <string name="tm_about">О программе...</string>
     <string name="ftm_share">Поделиться</string>
 
@@ -17,5 +17,6 @@
     <string name="settings">Настройки</string>
     <string name="main">Основное</string>
     <string name="favorite">Избранное (фрагменты)</string>
+    <string name="update">Изменить</string>
 
 </resources>

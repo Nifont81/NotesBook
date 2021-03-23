@@ -6,7 +6,7 @@
     <string name="tm_add">Add</string>
     <string name="tm_search">Search</string>
     <string name="tm_del">Delete</string>
-    <string name="tm_change_view">Change view</string>
+    <string name="tm_change_view">Clear all</string>
     <string name="tm_about">About...</string>
     <string name="ftm_share">Share</string>
 
@@ -18,5 +18,6 @@
 
     <string name="navigation_drawer_open" translatable="false">Open navigation drawer</string>
     <string name="navigation_drawer_close" translatable="false">Close navigation drawer</string>
+    <string name="update">Update</string>
 
 </resources>

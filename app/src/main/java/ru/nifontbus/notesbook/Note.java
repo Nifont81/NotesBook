@@ -3,6 +3,7 @@ package ru.nifontbus.notesbook;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+// Класс данных заметки
 public class Note implements Parcelable {
     private int id;
     private String title;
