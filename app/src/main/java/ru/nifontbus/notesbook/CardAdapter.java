@@ -1,5 +1,6 @@
 package ru.nifontbus.notesbook;
 
+import android.icu.text.SimpleDateFormat;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -10,6 +11,8 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.RecyclerView;
+
+import java.util.Date;
 
 public class CardAdapter
         extends RecyclerView.Adapter<CardAdapter.ViewHolder> {
@@ -50,7 +53,8 @@ public class CardAdapter
         viewHolder.setData(dataSource.getCardData(position));
 
         CardData cardData = dataSource.getCardData(position);
-        Note note = new Note(position, cardData.getTitle(), cardData.getDescription());
+        CardData note = new CardData(position, cardData.getTitle(),
+                cardData.getDescription(), false, new Date());
 
         viewHolder.title.setOnClickListener(v -> {
             if (itemClickListener != null) {
@@ -63,7 +67,7 @@ public class CardAdapter
     // Вернуть размер данных, вызывается менеджером
     @Override
     public int getItemCount() {
-        return dataSource.size();
+        return dataSource.getItemsCount();
     }
 
     // Сеттер слушателя нажатий
@@ -81,12 +85,14 @@ public class CardAdapter
         private TextView description;
         //        private AppCompatImageView image;
         private CheckBox like;
+        private TextView date;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
             title = itemView.findViewById(R.id.title);
             description = itemView.findViewById(R.id.description);
             like = itemView.findViewById(R.id.like);
+            date = itemView.findViewById(R.id.date);
 
             registerContextMenu(itemView);
 
@@ -117,6 +123,7 @@ public class CardAdapter
             str = (str.length() < 60) ? str : str.substring(0, 59) + "...";
             description.setText(str);
             like.setChecked(cardData.isLike());
+            date.setText(new SimpleDateFormat("dd-MM-yy").format(cardData.getDate()));
         }
     }
 

@@ -17,13 +17,13 @@ import android.widget.Toast;
 public class DescriptionFragment extends Fragment {
 
     public static final String ARG_NOTE = "TextCurrentNote";
-    private Note currentNote;
+    private CardData currentNote;
 
     public DescriptionFragment() {
         // Required empty public constructor
     }
 
-    public static DescriptionFragment newInstance(Note note) {
+    public static DescriptionFragment newInstance(CardData note) {
         DescriptionFragment fragment = new DescriptionFragment();
         Bundle args = new Bundle();
         args.putParcelable(ARG_NOTE, note);
@@ -50,7 +50,7 @@ public class DescriptionFragment extends Fragment {
         setHasOptionsMenu(true);
         // находим в контейнере элементы
         TextView tvName = view.findViewById(R.id.nameNote);
-        TextView tvText = view.findViewById(R.id.textNote);
+        TextView tvText = view.findViewById(R.id.detail_note);
         tvName.setText(currentNote.getTitle());
         tvText.setText(currentNote.getDescription());
         return view;

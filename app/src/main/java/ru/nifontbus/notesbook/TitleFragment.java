@@ -23,6 +23,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
+import java.util.Calendar;
+
 public class TitleFragment extends Fragment {
 
     private static ru.nifontbus.notesbook.fragmentSendDataListener fragmentSendDataListener;
@@ -31,8 +33,19 @@ public class TitleFragment extends Fragment {
     private CardAdapter adapter;
     private RecyclerView recyclerView;
 
+    private Navigation navigation;
+    // признак, что при повторном открытии фрагмента
+    // (возврате из фрагмента, добавляющего запись)
+    // надо прыгнуть на последнюю запись
+    private boolean moveToLastPosition;
+
     public TitleFragment() {
         // Required empty public constructor
+    }
+
+    public static TitleFragment newInstance() {
+        TitleFragment titleFragment = new TitleFragment();
+        return titleFragment;
     }
 
     @Override
@@ -44,6 +57,8 @@ public class TitleFragment extends Fragment {
             throw new ClassCastException(context.toString()
                     + " должен реализовывать интерфейс OnFragmentInteractionListener");
         }
+        MainActivity activity = (MainActivity) context;
+        navigation = activity.getNavigation();
     }
 
     @Override
@@ -58,8 +73,6 @@ public class TitleFragment extends Fragment {
 
     private void initView(View view) {
         recyclerView = view.findViewById(R.id.recycler_view_lines);
-        // Получим источник данных для списка
-        data = new CardsSourceImpl(getResources()).init();
         initRecyclerView();
     }
 
@@ -71,7 +84,8 @@ public class TitleFragment extends Fragment {
         LinearLayoutManager layoutManager = new LinearLayoutManager(requireActivity());
         recyclerView.setLayoutManager(layoutManager);
 
-        data = new CardsSourceImpl(getResources()).init();
+        data = CardsSourceImpl.getInstance(getResources());
+
         adapter = new CardAdapter(data, this);
         recyclerView.setAdapter(adapter);
 
@@ -86,6 +100,11 @@ public class TitleFragment extends Fragment {
         animator.setAddDuration(MY_DEFAULT_DURATION);
         animator.setRemoveDuration(MY_DEFAULT_DURATION);
         recyclerView.setItemAnimator(animator);
+
+        if (moveToLastPosition) {
+            recyclerView.smoothScrollToPosition(data.getItemsCount() - 1);
+            moveToLastPosition = false;
+        }
 
         adapter.SetOnItemClickListener(fragmentSendDataListener);
     }
@@ -124,17 +143,24 @@ public class TitleFragment extends Fragment {
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         switch (item.getItemId()) {
             case R.id.toolbar_menu_add:
-                data.addCardData(new CardData("Заметка " + data.size(),
-                        "Описание заметки" + data.size(),
-                        false));
-                adapter.notifyItemInserted(data.size() - 1);
-                recyclerView.smoothScrollToPosition(data.size() - 1);
+                int position = data.getItemsCount();
+                data.add(new CardData(position - 1, "", "",
+                        false, Calendar.getInstance().getTime()));
+                navigation.addEditFragment(position);
+                adapter.notifyItemInserted(position);
+
+                recyclerView.smoothScrollToPosition(data.getItemsCount() - 1);
+
+                // это сигнал, чтобы вызванный метод onCreateView
+                // перепрыгнул на конец списка
+                moveToLastPosition = true;
+
                 break;
             case R.id.toolbar_menu_search:
                 msg("Поиск");
                 break;
             case R.id.toolbar_menu_clear:
-                data.clearCardData();
+                data.clear();
                 adapter.notifyDataSetChanged();
                 break;
         }
@@ -163,17 +189,15 @@ public class TitleFragment extends Fragment {
     @Override
     public boolean onContextItemSelected(@NonNull MenuItem item) {
         int position = adapter.getMenuPosition();
-        switch(item.getItemId()) {
+        switch (item.getItemId()) {
             case R.id.action_update:
-                data.updateCardData(position,
-                        new CardData("Заметка " + position,
-                                data.getCardData(position).getDescription(),
-                                false));
+                navigation.addEditFragment(position);
+                //data.update();
                 adapter.notifyItemChanged(position);
 
                 return true;
             case R.id.action_delete:
-                data.deleteCardData(position);
+                data.remove(position);
                 adapter.notifyItemRemoved(position);
                 return true;
         }

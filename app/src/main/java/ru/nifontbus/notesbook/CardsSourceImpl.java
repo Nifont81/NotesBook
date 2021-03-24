@@ -2,19 +2,34 @@ package ru.nifontbus.notesbook;
 
 import android.content.res.Resources;
 
-import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.LinkedList;
 import java.util.List;
 
 public class CardsSourceImpl implements CardsSource {
-    private List<CardData> dataSource;
+    private volatile static CardsSourceImpl sInstance;
+    private List<CardData> dataSource = new LinkedList<>();
     private Resources resources;    // ресурсы приложения
 
-    public CardsSourceImpl(Resources resources) {
-        dataSource = new ArrayList<>(7);
-        this.resources = resources;
+    public static CardsSourceImpl getInstance(Resources resources) {
+        CardsSourceImpl instance = sInstance;
+        if (instance == null) {
+            synchronized (CardsSourceImpl.class) {
+                if (sInstance == null) {
+                    instance = new CardsSourceImpl(resources);
+                    sInstance = instance;
+                }
+            }
+        }
+        return instance;
     }
 
-    public CardsSourceImpl init(){
+    public CardsSourceImpl(Resources resources) {
+        this.resources = resources;
+        initRes();
+    }
+
+    public CardsSourceImpl initRes(){
         // строки заголовков из ресурсов
         String[] titles = resources.getStringArray(R.array.note_titles);
         // строки описаний из ресурсов
@@ -23,7 +38,8 @@ public class CardsSourceImpl implements CardsSource {
 //        int[] pictures = getImageArray();
         // заполнение источника данных
         for (int i = 0; i < descriptions.length; i++) {
-            dataSource.add(new CardData(titles[i], descriptions[i], false));
+            dataSource.add(new CardData(-1, titles[i], descriptions[i],
+                    false, Calendar.getInstance().getTime()));
         }
         return this;
     }
@@ -50,27 +66,32 @@ public class CardsSourceImpl implements CardsSource {
             return null;
     }
 
-    public int size(){
+    @Override
+    public CardData getItemAt(int idx) {
+        return dataSource.get(idx);
+    }
+
+    public int getItemsCount(){
         return dataSource.size();
     }
 
     @Override
-    public void deleteCardData(int position) {
+    public void remove(int position) {
         dataSource.remove(position);
     }
 
     @Override
-    public void updateCardData(int position, CardData cardData) {
-        dataSource.set(position, cardData);
+    public void update(CardData cardData) {
+        dataSource.set(cardData.getId(), cardData);
     }
 
     @Override
-    public void addCardData(CardData cardData) {
+    public void add(CardData cardData) {
         dataSource.add(cardData);
     }
 
     @Override
-    public void clearCardData() {
+    public void clear() {
         dataSource.clear();
     }
 

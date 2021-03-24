@@ -2,10 +2,11 @@ package ru.nifontbus.notesbook;
 
 public interface CardsSource {
     CardData getCardData(int position);
-    int size();
-    void deleteCardData(int position);
-    void updateCardData(int position, CardData cardData);
-    void addCardData(CardData cardData);
-    void clearCardData();
+    CardData getItemAt(int idx);
+    int getItemsCount();
+    void remove(int position);
+    void update(CardData cardData);
+    void add(CardData cardData);
+    void clear();
 
 }

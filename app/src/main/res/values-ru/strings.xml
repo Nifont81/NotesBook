@@ -18,5 +18,6 @@
     <string name="main">Основное</string>
     <string name="favorite">Избранное (фрагменты)</string>
     <string name="update">Изменить</string>
+    <string name="save">Сохранить</string>
 
 </resources>

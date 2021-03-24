@@ -3,7 +3,6 @@ package ru.nifontbus.notesbook;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.SearchView;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
@@ -15,39 +14,43 @@ import android.annotation.SuppressLint;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.widget.Toast;
 
 import com.google.android.material.navigation.NavigationView;
 
+import java.util.Date;
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity implements fragmentSendDataListener {
 
-    private Note currentNote;
+    private CardData currentNote;
     public static final String CURRENT_NOTE = "MainCurrentNote";
     private boolean isLandscape;
+    private Navigation navigation;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        navigation = new Navigation(getSupportFragmentManager());
 
         Toolbar toolbar = initToolbar();
         initDrawer(toolbar);
 
+//        getNavigation().addEditFragment(TitleFragment.newInstance(), false);
+
         if (savedInstanceState != null) {
             currentNote = savedInstanceState.getParcelable(CURRENT_NOTE);
         } else {
-            currentNote = new Note(-1, "...", "");
+            currentNote = new CardData(-1, "...", "", false, new Date());
         }
 
         isLandscape = getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE;
+        getNavigation().isLandscape = isLandscape;
 
-            getSupportFragmentManager().beginTransaction()
-                    .replace(R.id.notes_container, new TitleFragment())
-                    .commit();
+        getSupportFragmentManager().beginTransaction()
+                .replace(R.id.notes_container, TitleFragment.newInstance())
+                .commit();
 
         if (isLandscape && currentNote != null) {
             showLandDetailNote(currentNote);
@@ -61,7 +64,7 @@ public class MainActivity extends AppCompatActivity implements fragmentSendDataL
     }
 
     @Override
-    public void showDetailNote(Note note) {
+    public void showDetailNote(CardData note) {
         currentNote = note;
         if (isLandscape) {
             showLandDetailNote(note);
@@ -71,16 +74,16 @@ public class MainActivity extends AppCompatActivity implements fragmentSendDataL
     }
 
     // Показать содержимое заметки в ландшафтной ориентации
-    public void showLandDetailNote(Note note) {
+    public void showLandDetailNote(CardData note) {
 
         getSupportFragmentManager()
                 .beginTransaction()
-                .replace(R.id.textNote, DescriptionFragment.newInstance(note))  // замена фрагмента
+                .replace(R.id.detail_note, DescriptionFragment.newInstance(note))  // замена фрагмента
                 .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE)
                 .commit();
     }
 
-    public void showPortDetailNote(Note note) {
+    public void showPortDetailNote(CardData note) {
         getSupportFragmentManager()
                 .beginTransaction()
                 .replace(R.id.notes_container, DescriptionFragment.newInstance(note))
@@ -121,6 +124,10 @@ public class MainActivity extends AppCompatActivity implements fragmentSendDataL
     private Toolbar initToolbar() {
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setHomeButtonEnabled(true);
+
         return toolbar;
     }
 
@@ -144,6 +151,16 @@ public class MainActivity extends AppCompatActivity implements fragmentSendDataL
             }
             return false;
         });
+    }
+
+    @Override
+    public boolean onSupportNavigateUp() {
+        onBackPressed();
+        return true;
+    }
+
+    public Navigation getNavigation() {
+        return navigation;
     }
 
     private void msg(String message) {
