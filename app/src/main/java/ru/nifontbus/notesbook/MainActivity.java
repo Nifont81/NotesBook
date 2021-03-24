@@ -3,7 +3,6 @@ package ru.nifontbus.notesbook;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.SearchView;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
@@ -15,17 +14,16 @@ import android.annotation.SuppressLint;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.widget.Toast;
 
 import com.google.android.material.navigation.NavigationView;
 
+import java.util.Date;
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity implements fragmentSendDataListener {
 
-    private Note currentNote;
+    private CardData currentNote;
     public static final String CURRENT_NOTE = "MainCurrentNote";
     private boolean isLandscape;
 
@@ -37,17 +35,20 @@ public class MainActivity extends AppCompatActivity implements fragmentSendDataL
         Toolbar toolbar = initToolbar();
         initDrawer(toolbar);
 
+//        getNavigation().addEditFragment(TitleFragment.newInstance(), false);
+
         if (savedInstanceState != null) {
             currentNote = savedInstanceState.getParcelable(CURRENT_NOTE);
         } else {
-            currentNote = new Note(-1, "...", "");
+            currentNote = new CardData(-1, "...", "", false,
+                    new Date(), R.drawable.draw1);
         }
 
         isLandscape = getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE;
 
-            getSupportFragmentManager().beginTransaction()
-                    .replace(R.id.notes_container, new TitleFragment())
-                    .commit();
+        getSupportFragmentManager().beginTransaction()
+                .replace(R.id.notes_container, TitleFragment.newInstance())
+                .commit();
 
         if (isLandscape && currentNote != null) {
             showLandDetailNote(currentNote);
@@ -61,7 +62,7 @@ public class MainActivity extends AppCompatActivity implements fragmentSendDataL
     }
 
     @Override
-    public void showDetailNote(Note note) {
+    public void showDetailNote(CardData note) {
         currentNote = note;
         if (isLandscape) {
             showLandDetailNote(note);
@@ -71,16 +72,16 @@ public class MainActivity extends AppCompatActivity implements fragmentSendDataL
     }
 
     // Показать содержимое заметки в ландшафтной ориентации
-    public void showLandDetailNote(Note note) {
+    public void showLandDetailNote(CardData note) {
 
         getSupportFragmentManager()
                 .beginTransaction()
-                .replace(R.id.textNote, DescriptionFragment.newInstance(note))  // замена фрагмента
+                .replace(R.id.detail_note, DescriptionFragment.newInstance(note))  // замена фрагмента
                 .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE)
                 .commit();
     }
 
-    public void showPortDetailNote(Note note) {
+    public void showPortDetailNote(CardData note) {
         getSupportFragmentManager()
                 .beginTransaction()
                 .replace(R.id.notes_container, DescriptionFragment.newInstance(note))
@@ -89,11 +90,25 @@ public class MainActivity extends AppCompatActivity implements fragmentSendDataL
                 .commit();
     }
 
+    public void addEditFragment(int position) {
+        // Открыть транзакцию
+        int id;
+        if (isLandscape) {
+            getSupportFragmentManager()
+                    .beginTransaction()
+                    .replace(R.id.detail_note, CardEditFragment.newInstance(position))
+                    .commit();
+        } else {
+            getSupportFragmentManager()
+                    .beginTransaction()
+                    .replace(R.id.notes_container, CardEditFragment.newInstance(position))
+                    .addToBackStack(null)
+                    .commit();
+        }
+    }
+
     /**
      * Обработка бокового навигационного меню
-     *
-     * @param id
-     * @return
      */
     @SuppressLint("NonConstantResourceId")
     private boolean navigateFragment(int id) {
@@ -118,44 +133,13 @@ public class MainActivity extends AppCompatActivity implements fragmentSendDataL
         return false;
     }
 
-    /**
-     * Обработка верхнего меню
-     *
-     * @param item
-     * @return
-     */
-    @SuppressLint("NonConstantResourceId")
-    @Override
-    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-        switch (item.getItemId()) {
-            case R.id.toolbar_menu_add:
-                msg("Добавить элемент");
-                break;
-            case R.id.toolbar_menu_search:
-                msg("Поиск");
-                break;
-            case R.id.toolbar_menu_delete:
-                msg("Удалить элемент");
-                break;
-            case R.id.toolbar_menu_view:
-                msg("Изменить вид");
-                break;
-        }
-        return super.onOptionsItemSelected(item);
-    }
-
-    /**
-     * Поиск элемента
-     *
-     * @param query - строка поиска
-     */
-    private void findAction(String query) {
-        msg("Поиск " + query);
-    }
-
     private Toolbar initToolbar() {
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setHomeButtonEnabled(true);
+
         return toolbar;
     }
 
@@ -181,29 +165,9 @@ public class MainActivity extends AppCompatActivity implements fragmentSendDataL
         });
     }
 
-
     @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.toolbar_menu, menu);
-
-        MenuItem search = menu.findItem(R.id.toolbar_menu_search); // поиск пункта меню поиска
-        SearchView searchText = (SearchView) search.getActionView(); // строка поиска
-
-        searchText.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
-            // реагирует на конец ввода поиска
-            @Override
-            public boolean onQueryTextSubmit(String query) {
-                findAction(query);
-                return true;
-            }
-
-            // реагирует на нажатие каждой клавиши
-            @Override
-            public boolean onQueryTextChange(String newText) {
-                return true;
-            }
-        });
-
+    public boolean onSupportNavigateUp() {
+        onBackPressed();
         return true;
     }
 

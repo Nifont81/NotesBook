@@ -2,19 +2,17 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <item
-        android:id="@+id/toolbar_menu_add"
-        android:icon="@drawable/ic_launcher_foreground"
-        android:title="@string/tm_add"/>
-    <item
         android:id="@+id/toolbar_menu_search"
         android:title="@string/tm_search"
         android:icon="@android:drawable/ic_menu_search"
         app:actionViewClass="androidx.appcompat.widget.SearchView"
         app:showAsAction="ifRoom"/>
     <item
-        android:id="@+id/toolbar_menu_delete"
-        android:title="@string/tm_del" />
-    <item
-        android:id="@+id/toolbar_menu_view"
+        android:id="@+id/toolbar_menu_add"
+        android:icon="@android:drawable/ic_menu_add"
+        app:showAsAction="always"
+        android:title="@string/tm_add"/>
+     <item
+        android:id="@+id/toolbar_menu_clear"
         android:title="@string/tm_change_view" />
 </menu>

@@ -1,14 +1,39 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+
+    <string-array name="available_notes">
+        <item>Важно и срочно</item>
+        <item>Важно и несрочно</item>
+        <item>Неважно и срочно</item>
+        <item>Неважно и несрочно</item>
+    </string-array>
+
+    <integer-array name="available_notes_imgs">
+        <item>@drawable/draw1</item>
+        <item>@drawable/draw2</item>
+        <item>@drawable/draw3</item>
+        <item>@drawable/draw4</item>
+    </integer-array>
+
+    <integer-array name="note_imgs">
+        <item>@drawable/draw1</item>
+        <item>@drawable/draw2</item>
+        <item>@drawable/draw3</item>
+        <item>@drawable/draw4</item>
+        <item>@drawable/draw2</item>
+        <item>@drawable/draw3</item>
+        <item>@drawable/draw4</item>
+    </integer-array>
+
     <string-array name="note_titles">
         <item>Стих Пушкина</item>
-        <item>Вторая</item>
+        <item>Стих Лермонтова</item>
         <item>Третья</item>
         <item>Четвертая</item>
         <item>Пятая</item>
         <item>6</item>
         <item>7</item>
-     </string-array>
+    </string-array>
 
     <string-array name="note_descriptions">
         <item>
@@ -18,21 +43,21 @@
         Открой сомкнуты негой взоры\n
         Навстречу северной Авроры,\n
         Звездою севера явись!\n
-
+        \n
         Вечор, ты помнишь, вьюга злилась,\n
         На мутном небе мгла носилась;\n
         Луна, как бледное пятно,\n
         Сквозь тучи мрачные желтела,\n
         И ты печальная сидела —\n
         А нынче… погляди в окно:\n
-
+        \n
         Под голубыми небесами\n
         Великолепными коврами,\n
         Блестя на солнце, снег лежит;\n
         Прозрачный лес один чернеет,\n
         И ель сквозь иней зеленеет,\n
         И речка подо льдом блестит.\n
-
+        \n
         Вся комната янтарным блеском\n
         Озарена. Веселым треском\n
         Трещит затопленная печь.\n
@@ -40,7 +65,28 @@
         Но знаешь: не велеть ли в санки\n
         Кобылку бурую запречь?
         </item>
-        <item>Текст 2 заметки</item>
+        <item>
+        Пророк\n\n
+        С тех пор как вечный судия\n
+        Мне дал всеведенье пророка,\n
+        В очах людей читаю я\n
+        Страницы злобы и порока.\n
+        \n
+        Провозглашать я стал любви\n
+        И правды чистые ученья:\n
+        В меня все ближние мои\n
+        Бросали бешено каменья.\n
+        \n
+        Посыпал пеплом я главу,\n
+        Из городов бежал я нищий,\n
+        И вот в пустыне я живу,\n
+        Как птицы, даром божьей пищи;\n
+        \n
+        Завет предвечного храня,\n
+        Мне тварь покорна там земная;\n
+        И звезды слушают меня,\n
+        Лучами радостно играя.\n
+        </item>
         <item>Текст 3 заметки</item>
         <item>Текст 4 заметки</item>
         <item>Текст 5 заметки</item>

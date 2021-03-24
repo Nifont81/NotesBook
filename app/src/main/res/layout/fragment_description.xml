@@ -7,11 +7,18 @@
     tools:context=".DescriptionFragment">
 
     <TextView
-        android:id="@+id/nameNote"
+        android:id="@+id/name_note"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="@string/text_name"
         android:textSize="40sp" />
+    <TextView
+        android:id="@+id/date_note"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="end"
+        android:textSize="@dimen/textDescription"
+        android:text="Data" />
 
      <ScrollView
         android:layout_width="match_parent"
@@ -22,7 +29,7 @@
             android:layout_height="wrap_content"
             android:orientation="vertical">
             <TextView
-                android:id="@+id/textNote"
+                android:id="@+id/detail_note"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="@string/text_note"
