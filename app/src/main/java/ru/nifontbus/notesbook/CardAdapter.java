@@ -9,6 +9,7 @@ import android.widget.CheckBox;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.widget.AppCompatImageView;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -51,16 +52,14 @@ public class CardAdapter
         // Получить элемент из источника данных (БД, интернет...)
         // Вынести на экран используя ViewHolder
         viewHolder.setData(dataSource.getCardData(position));
-
         CardData cardData = dataSource.getCardData(position);
-        CardData note = new CardData(position, cardData.getTitle(),
-                cardData.getDescription(), false, new Date());
 
         viewHolder.title.setOnClickListener(v -> {
             if (itemClickListener != null) {
-                itemClickListener.showDetailNote(note);
+                itemClickListener.showDetailNote(cardData);
             }
         });
+
         Log.d(TAG, "onBindViewHolder POS = " + position);
     }
 
@@ -83,7 +82,7 @@ public class CardAdapter
 
         private TextView title;
         private TextView description;
-        //        private AppCompatImageView image;
+        private AppCompatImageView image;
         private CheckBox like;
         private TextView date;
 
@@ -93,10 +92,17 @@ public class CardAdapter
             description = itemView.findViewById(R.id.description);
             like = itemView.findViewById(R.id.like);
             date = itemView.findViewById(R.id.date);
+            image = itemView.findViewById(R.id.list_item_img);
 
             registerContextMenu(itemView);
 
-            // Обработчик нажатий на заголовке
+            // Обработчики нажатий на заголовке
+            image.setOnLongClickListener(v -> {
+                menuPosition = getLayoutPosition();
+                itemView.showContextMenu(10, 10);
+                return true;
+            });
+
             title.setOnLongClickListener(v -> {
                 menuPosition = getLayoutPosition();
                 itemView.showContextMenu(10, 10);
@@ -106,7 +112,7 @@ public class CardAdapter
         }
 
         private void registerContextMenu(@NonNull View itemView) {
-            if (fragment != null){
+            if (fragment != null) {
                 itemView.setOnLongClickListener(v -> {
                     menuPosition = getLayoutPosition();
                     return false;
@@ -124,6 +130,12 @@ public class CardAdapter
             description.setText(str);
             like.setChecked(cardData.isLike());
             date.setText(new SimpleDateFormat("dd-MM-yy").format(cardData.getDate()));
+            image.setImageResource(cardData.getImageResourceId());
+            image.setOnClickListener(v -> {
+                if (itemClickListener != null) {
+                    itemClickListener.showDetailNote(cardData);
+                }
+            });
         }
     }
 

@@ -1,5 +1,6 @@
 package ru.nifontbus.notesbook;
 
+import android.icu.text.SimpleDateFormat;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -49,10 +50,12 @@ public class DescriptionFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_description, container, false);
         setHasOptionsMenu(true);
         // находим в контейнере элементы
-        TextView tvName = view.findViewById(R.id.nameNote);
+        TextView tvName = view.findViewById(R.id.name_note);
         TextView tvText = view.findViewById(R.id.detail_note);
+        TextView tvDate = view.findViewById(R.id.date_note);
         tvName.setText(currentNote.getTitle());
         tvText.setText(currentNote.getDescription());
+        tvDate.setText(new SimpleDateFormat("dd-MM-yy").format(currentNote.getDate()));
         return view;
     }
 

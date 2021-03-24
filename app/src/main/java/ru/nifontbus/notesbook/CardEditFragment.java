@@ -1,16 +1,21 @@
 package ru.nifontbus.notesbook;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
+import android.content.res.TypedArray;
 import android.os.Bundle;
 
-import androidx.annotation.NonNull;
+import androidx.annotation.DrawableRes;
+import androidx.appcompat.widget.AppCompatImageView;
+import androidx.appcompat.widget.AppCompatSpinner;
 import androidx.fragment.app.Fragment;
 
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.AdapterView;
 import android.widget.DatePicker;
 
 import com.google.android.material.button.MaterialButton;
@@ -19,19 +24,23 @@ import com.google.android.material.textfield.TextInputEditText;
 import java.util.Calendar;
 import java.util.Date;
 
-public class CardFragment extends Fragment {
+public class CardEditFragment extends Fragment {
 
     private static final String ARG_ITEM_IDX = "EditorFragment.item_idx";
     private int mCurrentItemIdx = -1;
+    private @DrawableRes
+    int currentImageResourceId = -1;
 
     private CardData cardData;      // Данные по карточке
     private TextInputEditText title;
     private TextInputEditText description;
     private DatePicker datePicker;
+    private AppCompatImageView image;
+    private AppCompatSpinner spinner;
 
     // Для редактирования данных
-    public static CardFragment newInstance(int currentItemIdx) {
-        CardFragment fragment = new CardFragment();
+    public static CardEditFragment newInstance(int currentItemIdx) {
+        CardEditFragment fragment = new CardEditFragment();
         Bundle args = new Bundle();
         args.putInt(ARG_ITEM_IDX, currentItemIdx);
         fragment.setArguments(args);
@@ -62,6 +71,22 @@ public class CardFragment extends Fragment {
             getFragmentManager().popBackStack();
         });
 
+        spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view,
+                                       int position, long id) {
+                TypedArray imgs = getResources().obtainTypedArray(R.array.available_notes_imgs);
+                currentImageResourceId = imgs.getResourceId(position, -1);
+                image.setImageResource(currentImageResourceId);
+                imgs.recycle();
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+                // Do nothing
+            }
+        });
+
         // если cardData пустая, то это добавление
         if (cardData != null) {
             populateView();
@@ -75,10 +100,12 @@ public class CardFragment extends Fragment {
         imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
     }
 
+    // Сохранение данных
     private void collectCardData() {
         cardData.setTitle(this.title.getText().toString());
         cardData.setDescription(this.description.getText().toString());
         cardData.setDate(getDateFromDatePicker());
+        cardData.setImageResourceId(this.currentImageResourceId);
     }
 
     // Получение даты из DatePicker
@@ -94,12 +121,32 @@ public class CardFragment extends Fragment {
         title = view.findViewById(R.id.inputTitle);
         description = view.findViewById(R.id.inputDescription);
         datePicker = view.findViewById(R.id.inputDate);
+        image = view.findViewById(R.id.list_item_img);
+        spinner = view.findViewById(R.id.note_spinner);
     }
 
+    // Заполнение формы полученными данными
+    @SuppressLint("NonConstantResourceId")
     private void populateView() {
         title.setText(cardData.getTitle());
         description.setText(cardData.getDescription());
         initDatePicker(cardData.getDate());
+
+        int idRes = cardData.getImageResourceId();
+        int pos = 0;
+        switch (idRes) {
+            case R.drawable.draw2:
+                pos = 1;
+                break;
+            case R.drawable.draw3:
+                pos = 2;
+                break;
+            case R.drawable.draw4:
+                pos = 3;
+                break;
+        }
+        spinner.setSelection(pos);
+
     }
 
     // Установка даты в DatePicker

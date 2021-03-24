@@ -3,25 +3,48 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".CardFragment">
+    tools:context=".CardEditFragment">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical">
 
-
-        <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/title"
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
 
-            <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/inputTitle"
-                android:layout_width="match_parent"
+            <androidx.appcompat.widget.AppCompatImageView
+                android:id="@+id/list_item_img"
+                android:layout_width="0dp"
+                android:layout_height="100dp"
+                android:layout_margin="5dp"
+                android:layout_weight="1"
+                android:scaleType="centerInside"
+                tools:src="@drawable/draw4" />
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/title"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:hint="Заголовок" />
-        </com.google.android.material.textfield.TextInputLayout>
+                android:layout_gravity="center_vertical"
+                android:layout_weight="3">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/inputTitle"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="Заголовок" />
+            </com.google.android.material.textfield.TextInputLayout>
+        </LinearLayout>
+
+        <androidx.appcompat.widget.AppCompatSpinner
+            android:id="@+id/note_spinner"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:entries="@array/available_notes"
+            android:spinnerMode="dialog" />
 
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/description"
@@ -42,8 +65,8 @@
             android:layout_gravity="center"
             android:calendarViewShown="false"
             android:datePickerMode="spinner" />
-        <!-- также можно делать режим календаря
-        android:datePickerMode="calendar"
+
+<!--        android:datePickerMode="calendar"
         и режим отображения календаря в spinner-режиме
         android:calendarViewShown="true" -->
 
@@ -51,7 +74,8 @@
             android:id="@+id/btn_save"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/save"
             android:layout_gravity="center"
+            android:text="@string/save"
             android:textSize="24sp" />
-    </LinearLayout></androidx.core.widget.NestedScrollView>
+    </LinearLayout>
+</androidx.core.widget.NestedScrollView>

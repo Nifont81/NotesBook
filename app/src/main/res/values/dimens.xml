@@ -3,8 +3,8 @@
     <dimen name="nav_header_height">200dp</dimen>
     <dimen name="nav_header_dimen">42sp</dimen>
 
-    <dimen name="textDescription">20sp</dimen>
+    <dimen name="textDescription">24sp</dimen>
     <dimen name="textTitle">42sp</dimen>
-    <dimen name="heightImage">200dp</dimen>
+    <dimen name="heightImage">120dp</dimen>
 
 </resources>

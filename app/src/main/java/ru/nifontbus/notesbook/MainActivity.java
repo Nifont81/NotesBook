@@ -26,13 +26,11 @@ public class MainActivity extends AppCompatActivity implements fragmentSendDataL
     private CardData currentNote;
     public static final String CURRENT_NOTE = "MainCurrentNote";
     private boolean isLandscape;
-    private Navigation navigation;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        navigation = new Navigation(getSupportFragmentManager());
 
         Toolbar toolbar = initToolbar();
         initDrawer(toolbar);
@@ -42,11 +40,11 @@ public class MainActivity extends AppCompatActivity implements fragmentSendDataL
         if (savedInstanceState != null) {
             currentNote = savedInstanceState.getParcelable(CURRENT_NOTE);
         } else {
-            currentNote = new CardData(-1, "...", "", false, new Date());
+            currentNote = new CardData(-1, "...", "", false,
+                    new Date(), R.drawable.draw1);
         }
 
         isLandscape = getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE;
-        getNavigation().isLandscape = isLandscape;
 
         getSupportFragmentManager().beginTransaction()
                 .replace(R.id.notes_container, TitleFragment.newInstance())
@@ -92,11 +90,25 @@ public class MainActivity extends AppCompatActivity implements fragmentSendDataL
                 .commit();
     }
 
+    public void addEditFragment(int position) {
+        // Открыть транзакцию
+        int id;
+        if (isLandscape) {
+            getSupportFragmentManager()
+                    .beginTransaction()
+                    .replace(R.id.detail_note, CardEditFragment.newInstance(position))
+                    .commit();
+        } else {
+            getSupportFragmentManager()
+                    .beginTransaction()
+                    .replace(R.id.notes_container, CardEditFragment.newInstance(position))
+                    .addToBackStack(null)
+                    .commit();
+        }
+    }
+
     /**
      * Обработка бокового навигационного меню
-     *
-     * @param id
-     * @return
      */
     @SuppressLint("NonConstantResourceId")
     private boolean navigateFragment(int id) {
@@ -157,10 +169,6 @@ public class MainActivity extends AppCompatActivity implements fragmentSendDataL
     public boolean onSupportNavigateUp() {
         onBackPressed();
         return true;
-    }
-
-    public Navigation getNavigation() {
-        return navigation;
     }
 
     private void msg(String message) {

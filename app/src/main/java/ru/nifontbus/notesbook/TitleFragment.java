@@ -33,7 +33,6 @@ public class TitleFragment extends Fragment {
     private CardAdapter adapter;
     private RecyclerView recyclerView;
 
-    private Navigation navigation;
     // признак, что при повторном открытии фрагмента
     // (возврате из фрагмента, добавляющего запись)
     // надо прыгнуть на последнюю запись
@@ -58,7 +57,6 @@ public class TitleFragment extends Fragment {
                     + " должен реализовывать интерфейс OnFragmentInteractionListener");
         }
         MainActivity activity = (MainActivity) context;
-        navigation = activity.getNavigation();
     }
 
     @Override
@@ -144,12 +142,10 @@ public class TitleFragment extends Fragment {
         switch (item.getItemId()) {
             case R.id.toolbar_menu_add:
                 int position = data.getItemsCount();
-                data.add(new CardData(position - 1, "", "",
-                        false, Calendar.getInstance().getTime()));
-                navigation.addEditFragment(position);
+                data.add(new CardData(position, "", "",
+                        false, Calendar.getInstance().getTime(), R.drawable.draw4));
+                ((MainActivity) getActivity()).addEditFragment(position);
                 adapter.notifyItemInserted(position);
-
-                recyclerView.smoothScrollToPosition(data.getItemsCount() - 1);
 
                 // это сигнал, чтобы вызванный метод onCreateView
                 // перепрыгнул на конец списка
@@ -191,8 +187,7 @@ public class TitleFragment extends Fragment {
         int position = adapter.getMenuPosition();
         switch (item.getItemId()) {
             case R.id.action_update:
-                navigation.addEditFragment(position);
-                //data.update();
+                ((MainActivity) getActivity()).addEditFragment(position);
                 adapter.notifyItemChanged(position);
 
                 return true;

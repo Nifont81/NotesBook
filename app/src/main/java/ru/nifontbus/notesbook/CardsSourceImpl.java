@@ -1,6 +1,7 @@
 package ru.nifontbus.notesbook;
 
 import android.content.res.Resources;
+import android.content.res.TypedArray;
 
 import java.util.Calendar;
 import java.util.LinkedList;
@@ -35,20 +36,19 @@ public class CardsSourceImpl implements CardsSource {
         // строки описаний из ресурсов
         String[] descriptions = resources.getStringArray(R.array.note_descriptions);
         // изображения
-//        int[] pictures = getImageArray();
+        int[] pictures = getImageArray();
         // заполнение источника данных
         for (int i = 0; i < descriptions.length; i++) {
-            dataSource.add(new CardData(-1, titles[i], descriptions[i],
-                    false, Calendar.getInstance().getTime()));
+            dataSource.add(new CardData(i, titles[i], descriptions[i],
+                    false, Calendar.getInstance().getTime(), pictures[i]));
         }
         return this;
     }
-/*
 
     // Механизм вытаскивания идентификаторов картинок
     // https://stackoverflow.com/questions/5347107/creating-integer-array-of-resource-ids
     private int[] getImageArray(){
-        TypedArray pictures = resources.obtainTypedArray(R.array.note_pictures);
+        TypedArray pictures = resources.obtainTypedArray(R.array.note_imgs);
         int length = pictures.length();
         int[] answer = new int[length];
         for(int i = 0; i < length; i++){
@@ -56,7 +56,6 @@ public class CardsSourceImpl implements CardsSource {
         }
         return answer;
     }
-*/
 
     public CardData getCardData(int position) {
         if (position>=0) {
