@@ -25,6 +25,9 @@ import android.widget.Toast;
 
 import java.util.Calendar;
 
+import ru.nifontbus.notesbook.observe.Observer;
+import ru.nifontbus.notesbook.observe.Publisher;
+
 public class TitleFragment extends Fragment {
 
     private static ru.nifontbus.notesbook.fragmentSendDataListener fragmentSendDataListener;
@@ -32,11 +35,12 @@ public class TitleFragment extends Fragment {
     private CardsSource data;
     private CardAdapter adapter;
     private RecyclerView recyclerView;
+    private Publisher publisher;
 
     // признак, что при повторном открытии фрагмента
     // (возврате из фрагмента, добавляющего запись)
-    // надо прыгнуть на последнюю запись
-    private boolean moveToLastPosition;
+    // надо прыгнуть на первую запись
+    private boolean moveToFirstPosition;
 
     public TitleFragment() {
         // Required empty public constructor
@@ -56,7 +60,15 @@ public class TitleFragment extends Fragment {
             throw new ClassCastException(context.toString()
                     + " должен реализовывать интерфейс OnFragmentInteractionListener");
         }
+
         MainActivity activity = (MainActivity) context;
+        publisher = activity.getPublisher();
+    }
+
+    @Override
+    public void onDetach() {
+        publisher = null;
+        super.onDetach();
     }
 
     @Override
@@ -66,6 +78,10 @@ public class TitleFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_title, container, false);
         initView(view);
         setHasOptionsMenu(true);
+
+        data = new CardsSourceFirebaseImpl().init(cardsData -> adapter.notifyDataSetChanged());
+        adapter.setDataSource(data);
+
         return view;
     }
 
@@ -82,9 +98,7 @@ public class TitleFragment extends Fragment {
         LinearLayoutManager layoutManager = new LinearLayoutManager(requireActivity());
         recyclerView.setLayoutManager(layoutManager);
 
-        data = CardsSourceImpl.getInstance(getResources());
-
-        adapter = new CardAdapter(data, this);
+        adapter = new CardAdapter(this);
         recyclerView.setAdapter(adapter);
 
         // Добавим разделитель карточек
@@ -99,9 +113,9 @@ public class TitleFragment extends Fragment {
         animator.setRemoveDuration(MY_DEFAULT_DURATION);
         recyclerView.setItemAnimator(animator);
 
-        if (moveToLastPosition) {
-            recyclerView.smoothScrollToPosition(data.getItemsCount() - 1);
-            moveToLastPosition = false;
+        if (moveToFirstPosition && data.size() > 0) {
+            recyclerView.scrollToPosition(0);
+            moveToFirstPosition = false;
         }
 
         adapter.SetOnItemClickListener(fragmentSendDataListener);
@@ -141,22 +155,26 @@ public class TitleFragment extends Fragment {
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         switch (item.getItemId()) {
             case R.id.toolbar_menu_add:
-                int position = data.getItemsCount();
-                data.add(new CardData(position, "", "",
-                        false, Calendar.getInstance().getTime(), R.drawable.draw4));
-                ((MainActivity) getActivity()).addEditFragment(position);
-                adapter.notifyItemInserted(position);
 
-                // это сигнал, чтобы вызванный метод onCreateView
-                // перепрыгнул на конец списка
-                moveToLastPosition = true;
+                int position = data.size();
+                CardData cardData = new CardData(position, "", "",
+                        false, Calendar.getInstance().getTime(), R.drawable.draw2);
+                ((MainActivity) getActivity()).addEditFragment(cardData);
 
+                publisher.subscribe(cardDataNew -> {
+                    data.addCardData(cardDataNew);
+                    adapter.notifyItemInserted(position);
+                    // это сигнал, чтобы вызванный метод onCreateView
+                    // перепрыгнул на начало списка
+                    moveToFirstPosition = true;
+                });
                 break;
+
             case R.id.toolbar_menu_search:
                 msg("Поиск");
                 break;
             case R.id.toolbar_menu_clear:
-                data.clear();
+                data.clearCardData();
                 adapter.notifyDataSetChanged();
                 break;
         }
@@ -184,15 +202,19 @@ public class TitleFragment extends Fragment {
     @SuppressLint("NonConstantResourceId")
     @Override
     public boolean onContextItemSelected(@NonNull MenuItem item) {
-        int position = adapter.getMenuPosition();
+        final int position = adapter.getMenuPosition();
         switch (item.getItemId()) {
             case R.id.action_update:
-                ((MainActivity) getActivity()).addEditFragment(position);
-                adapter.notifyItemChanged(position);
+                CardData cardData = data.getCardData(position);
+                ((MainActivity) getActivity()).addEditFragment(cardData);
+                publisher.subscribe(cardDataUpdate -> {
+                    data.updateCardData(cardDataUpdate);
+                    adapter.notifyItemChanged(position);
+                });
 
                 return true;
             case R.id.action_delete:
-                data.remove(position);
+                data.deleteCardData(position);
                 adapter.notifyItemRemoved(position);
                 return true;
         }

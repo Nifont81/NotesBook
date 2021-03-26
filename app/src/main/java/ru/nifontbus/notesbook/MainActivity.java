@@ -21,11 +21,14 @@ import com.google.android.material.navigation.NavigationView;
 import java.util.Date;
 import java.util.List;
 
+import ru.nifontbus.notesbook.observe.Publisher;
+
 public class MainActivity extends AppCompatActivity implements fragmentSendDataListener {
 
     private CardData currentNote;
     public static final String CURRENT_NOTE = "MainCurrentNote";
     private boolean isLandscape;
+    private Publisher publisher = new Publisher();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -90,18 +93,18 @@ public class MainActivity extends AppCompatActivity implements fragmentSendDataL
                 .commit();
     }
 
-    public void addEditFragment(int position) {
+    public void addEditFragment(CardData cardData) {
         // Открыть транзакцию
         int id;
         if (isLandscape) {
             getSupportFragmentManager()
                     .beginTransaction()
-                    .replace(R.id.detail_note, CardEditFragment.newInstance(position))
+                    .replace(R.id.detail_note, CardEditFragment.newInstance(cardData))
                     .commit();
         } else {
             getSupportFragmentManager()
                     .beginTransaction()
-                    .replace(R.id.notes_container, CardEditFragment.newInstance(position))
+                    .replace(R.id.notes_container, CardEditFragment.newInstance(cardData))
                     .addToBackStack(null)
                     .commit();
         }
@@ -169,6 +172,10 @@ public class MainActivity extends AppCompatActivity implements fragmentSendDataL
     public boolean onSupportNavigateUp() {
         onBackPressed();
         return true;
+    }
+
+    public Publisher getPublisher() {
+        return publisher;
     }
 
     private void msg(String message) {

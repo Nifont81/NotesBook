@@ -7,6 +7,7 @@ import android.content.res.TypedArray;
 import android.os.Bundle;
 
 import androidx.annotation.DrawableRes;
+import androidx.annotation.NonNull;
 import androidx.appcompat.widget.AppCompatImageView;
 import androidx.appcompat.widget.AppCompatSpinner;
 import androidx.fragment.app.Fragment;
@@ -24,14 +25,15 @@ import com.google.android.material.textfield.TextInputEditText;
 import java.util.Calendar;
 import java.util.Date;
 
+import ru.nifontbus.notesbook.observe.Publisher;
+
 public class CardEditFragment extends Fragment {
 
-    private static final String ARG_ITEM_IDX = "EditorFragment.item_idx";
-    private int mCurrentItemIdx = -1;
-    private @DrawableRes
-    int currentImageResourceId = -1;
+    private static final String ARG_CARD_DATA = "Param_CardData";
+    private @DrawableRes int currentImageResourceId = -1;
 
     private CardData cardData;      // Данные по карточке
+    private Publisher publisher;    // Паблишер, с его помощью обмениваемся данными
     private TextInputEditText title;
     private TextInputEditText description;
     private DatePicker datePicker;
@@ -39,10 +41,10 @@ public class CardEditFragment extends Fragment {
     private AppCompatSpinner spinner;
 
     // Для редактирования данных
-    public static CardEditFragment newInstance(int currentItemIdx) {
+    public static CardEditFragment newInstance(CardData cardData) {
         CardEditFragment fragment = new CardEditFragment();
         Bundle args = new Bundle();
-        args.putInt(ARG_ITEM_IDX, currentItemIdx);
+        args.putParcelable(ARG_CARD_DATA, cardData);
         fragment.setArguments(args);
         return fragment;
     }
@@ -51,8 +53,21 @@ public class CardEditFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
-            mCurrentItemIdx = getArguments().getInt(ARG_ITEM_IDX, -1);
+            cardData = getArguments().getParcelable(ARG_CARD_DATA);
         }
+    }
+
+    @Override
+    public void onAttach(@NonNull Context context) {
+        super.onAttach(context);
+        MainActivity activity = (MainActivity)context;
+        publisher = activity.getPublisher();
+    }
+
+    @Override
+    public void onDetach() {
+        publisher = null;
+        super.onDetach();
     }
 
     @Override
@@ -61,13 +76,12 @@ public class CardEditFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_card, container, false);
         initView(view);
 
-        final CardsSource dataSource = CardsSourceImpl.getInstance(getResources());
-        cardData = dataSource.getItemAt(mCurrentItemIdx);
         final MaterialButton btnSave = view.findViewById(R.id.btn_save);
 
         btnSave.setOnClickListener((v) -> {
             collectCardData();
             hideKeyboardFrom(getContext(), v);
+            publisher.notifySingle(cardData);
             getFragmentManager().popBackStack();
         });
 
@@ -105,7 +119,7 @@ public class CardEditFragment extends Fragment {
         cardData.setTitle(this.title.getText().toString());
         cardData.setDescription(this.description.getText().toString());
         cardData.setDate(getDateFromDatePicker());
-        cardData.setImageResourceId(this.currentImageResourceId);
+        cardData.setPicture(this.currentImageResourceId);
     }
 
     // Получение даты из DatePicker
@@ -132,7 +146,7 @@ public class CardEditFragment extends Fragment {
         description.setText(cardData.getDescription());
         initDatePicker(cardData.getDate());
 
-        int idRes = cardData.getImageResourceId();
+        int idRes = cardData.getPicture();
         int pos = 0;
         switch (idRes) {
             case R.drawable.draw2:

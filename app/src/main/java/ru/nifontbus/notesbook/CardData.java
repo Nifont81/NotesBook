@@ -8,40 +8,39 @@ import androidx.annotation.DrawableRes;
 import java.util.Date;
 
 public class CardData implements Parcelable {
-    private int id;
+    private String id;          // идентификатор
+    private int pos;            // позиция в списке
     private String title;       // заголовок
     private String description; // описание
     private boolean like;       // флажок
     private Date date;          // дата
-    private @DrawableRes int imageResourceId;
+    private @DrawableRes int picture;
 
-    public CardData(int id, String title, String description,
-                    boolean like, Date date, @DrawableRes int imageResourceId) {
-        this.id = id;
+    public CardData(int pos, String title, String description,
+                    boolean like, Date date, @DrawableRes int picture) {
+        this.pos = pos;
         this.title = title;
         this.description = description;
         this.like = like;
         this.date = date;
-        this.imageResourceId = imageResourceId;
+        this.picture = picture;
     }
 
     protected CardData(Parcel in) {
-        id = in.readInt();
         title = in.readString();
         description = in.readString();
         like = in.readByte() != 0;
         date = new Date(in.readLong());
-        imageResourceId = in.readInt();
+        picture = in.readInt();
     }
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
-        dest.writeInt(id);
         dest.writeString(title);
         dest.writeString(description);
         dest.writeByte((byte) (like ? 1 : 0));
         dest.writeLong(date.getTime());
-        dest.writeInt(imageResourceId);
+        dest.writeInt(picture);
     }
 
     @Override
@@ -61,8 +60,20 @@ public class CardData implements Parcelable {
         }
     };
 
-    public int getId() {
+    public String getId() {
         return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
+
+    public int getPos() {
+        return pos;
+    }
+
+    public void setPos(int pos) {
+        this.pos = pos;
     }
 
     public String getTitle() {
@@ -81,10 +92,6 @@ public class CardData implements Parcelable {
         return date;
     }
 
-    public void setId(int id) {
-        this.id = id;
-    }
-
     public void setTitle(String title) {
         this.title = title;
     }
@@ -101,11 +108,13 @@ public class CardData implements Parcelable {
         this.date = date;
     }
 
-    public int getImageResourceId() {
-        return imageResourceId;
+    public int getPicture() {
+        return picture;
     }
 
-    public void setImageResourceId(int imageResourceId) {
-        this.imageResourceId = imageResourceId;
+    public void setPicture(int picture) {
+        this.picture = picture;
     }
+
+
 }

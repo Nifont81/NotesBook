@@ -27,10 +27,10 @@ public class CardsSourceImpl implements CardsSource {
 
     public CardsSourceImpl(Resources resources) {
         this.resources = resources;
-        initRes();
+        //initRes();
     }
 
-    public CardsSourceImpl initRes(){
+    public CardsSource init(CardsSourceResponse cardsSourceResponse){
         // строки заголовков из ресурсов
         String[] titles = resources.getStringArray(R.array.note_titles);
         // строки описаний из ресурсов
@@ -42,6 +42,11 @@ public class CardsSourceImpl implements CardsSource {
             dataSource.add(new CardData(i, titles[i], descriptions[i],
                     false, Calendar.getInstance().getTime(), pictures[i]));
         }
+
+        if (cardsSourceResponse != null){
+            cardsSourceResponse.initialized(this);
+        }
+
         return this;
     }
 
@@ -65,32 +70,27 @@ public class CardsSourceImpl implements CardsSource {
             return null;
     }
 
-    @Override
-    public CardData getItemAt(int idx) {
-        return dataSource.get(idx);
-    }
-
-    public int getItemsCount(){
+    public int size(){
         return dataSource.size();
     }
 
     @Override
-    public void remove(int position) {
+    public void deleteCardData(int position) {
         dataSource.remove(position);
     }
 
     @Override
-    public void update(CardData cardData) {
-        dataSource.set(cardData.getId(), cardData);
+    public void updateCardData(CardData cardData) {
+        dataSource.set(cardData.getPos(), cardData);
     }
 
     @Override
-    public void add(CardData cardData) {
+    public void addCardData(CardData cardData) {
         dataSource.add(cardData);
     }
 
     @Override
-    public void clear() {
+    public void clearCardData() {
         dataSource.clear();
     }
 

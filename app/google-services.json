@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "762048934569",
+    "project_id": "notesbook-10d1d",
+    "storage_bucket": "notesbook-10d1d.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:762048934569:android:f6107dfa88677811e22fb8",
+        "android_client_info": {
+          "package_name": "ru.nifontbus.notesbook"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "762048934569-2v1a1klcfp0q5bfm8gkgm6tp03mhnrja.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAtUyBxtqSPJGZ6BHpkkfabMMYQX7FOTQ4"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "762048934569-2v1a1klcfp0q5bfm8gkgm6tp03mhnrja.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
