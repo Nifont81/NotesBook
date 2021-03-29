@@ -1,6 +1,8 @@
-package ru.nifontbus.notesbook;
+package ru.nifontbus.notesbook.data;
 
 import java.util.Random;
+
+import ru.nifontbus.notesbook.R;
 
 public class PictureIndexConverter {
 

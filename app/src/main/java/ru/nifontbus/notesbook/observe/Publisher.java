@@ -3,7 +3,7 @@ package ru.nifontbus.notesbook.observe;
 import java.util.ArrayList;
 import java.util.List;
 
-import ru.nifontbus.notesbook.CardData;
+import ru.nifontbus.notesbook.data.CardData;
 
 public class Publisher {
     private List<Observer> observers;   // Все обозреватели

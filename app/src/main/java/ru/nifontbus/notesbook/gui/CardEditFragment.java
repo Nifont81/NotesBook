@@ -1,4 +1,4 @@
-package ru.nifontbus.notesbook;
+package ru.nifontbus.notesbook.gui;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
@@ -25,12 +25,16 @@ import com.google.android.material.textfield.TextInputEditText;
 import java.util.Calendar;
 import java.util.Date;
 
+import ru.nifontbus.notesbook.MainActivity;
+import ru.nifontbus.notesbook.R;
+import ru.nifontbus.notesbook.data.CardData;
 import ru.nifontbus.notesbook.observe.Publisher;
 
 public class CardEditFragment extends Fragment {
 
     private static final String ARG_CARD_DATA = "Param_CardData";
-    private @DrawableRes int currentImageResourceId = -1;
+    private @DrawableRes
+    int currentImageResourceId = -1;
 
     private CardData cardData;      // Данные по карточке
     private Publisher publisher;    // Паблишер, с его помощью обмениваемся данными
@@ -60,7 +64,7 @@ public class CardEditFragment extends Fragment {
     @Override
     public void onAttach(@NonNull Context context) {
         super.onAttach(context);
-        MainActivity activity = (MainActivity)context;
+        MainActivity activity = (MainActivity) context;
         publisher = activity.getPublisher();
     }
 

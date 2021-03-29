@@ -21,6 +21,10 @@ import com.google.android.material.navigation.NavigationView;
 import java.util.Date;
 import java.util.List;
 
+import ru.nifontbus.notesbook.data.CardData;
+import ru.nifontbus.notesbook.gui.CardEditFragment;
+import ru.nifontbus.notesbook.gui.DescriptionFragment;
+import ru.nifontbus.notesbook.gui.TitleFragment;
 import ru.nifontbus.notesbook.observe.Publisher;
 
 public class MainActivity extends AppCompatActivity implements fragmentSendDataListener {
@@ -43,7 +47,7 @@ public class MainActivity extends AppCompatActivity implements fragmentSendDataL
         if (savedInstanceState != null) {
             currentNote = savedInstanceState.getParcelable(CURRENT_NOTE);
         } else {
-            currentNote = new CardData(-1, "...", "", false,
+            currentNote = new CardData(-1, "...", "",
                     new Date(), R.drawable.draw1);
         }
 
@@ -100,6 +104,7 @@ public class MainActivity extends AppCompatActivity implements fragmentSendDataL
             getSupportFragmentManager()
                     .beginTransaction()
                     .replace(R.id.detail_note, CardEditFragment.newInstance(cardData))
+                    .addToBackStack(null)
                     .commit();
         } else {
             getSupportFragmentManager()

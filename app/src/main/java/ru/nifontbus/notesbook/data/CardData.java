@@ -1,4 +1,4 @@
-package ru.nifontbus.notesbook;
+package ru.nifontbus.notesbook.data;
 
 import android.os.Parcel;
 import android.os.Parcelable;
@@ -12,16 +12,16 @@ public class CardData implements Parcelable {
     private int pos;            // позиция в списке
     private String title;       // заголовок
     private String description; // описание
-    private boolean like;       // флажок
+//    private boolean like;       // флажок
     private Date date;          // дата
     private @DrawableRes int picture;
 
     public CardData(int pos, String title, String description,
-                    boolean like, Date date, @DrawableRes int picture) {
+                    Date date, @DrawableRes int picture) {
         this.pos = pos;
         this.title = title;
         this.description = description;
-        this.like = like;
+//        this.like = like;
         this.date = date;
         this.picture = picture;
     }
@@ -29,7 +29,7 @@ public class CardData implements Parcelable {
     protected CardData(Parcel in) {
         title = in.readString();
         description = in.readString();
-        like = in.readByte() != 0;
+//        like = in.readByte() != 0;
         date = new Date(in.readLong());
         picture = in.readInt();
     }
@@ -38,7 +38,7 @@ public class CardData implements Parcelable {
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeString(title);
         dest.writeString(description);
-        dest.writeByte((byte) (like ? 1 : 0));
+//        dest.writeByte((byte) (like ? 1 : 0));
         dest.writeLong(date.getTime());
         dest.writeInt(picture);
     }
@@ -84,9 +84,9 @@ public class CardData implements Parcelable {
         return description;
     }
 
-    public boolean isLike() {
-        return like;
-    }
+//    public boolean isLike() {
+//        return like;
+//    }
 
     public Date getDate() {
         return date;
@@ -100,9 +100,9 @@ public class CardData implements Parcelable {
         this.description = description;
     }
 
-    public void setLike(boolean like) {
-        this.like = like;
-    }
+//    public void setLike(boolean like) {
+//        this.like = like;
+//    }
 
     public void setDate(Date date) {
         this.date = date;

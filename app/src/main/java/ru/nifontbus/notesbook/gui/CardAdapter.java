@@ -1,4 +1,4 @@
-package ru.nifontbus.notesbook;
+package ru.nifontbus.notesbook.gui;
 
 import android.icu.text.SimpleDateFormat;
 import android.util.Log;
@@ -12,6 +12,11 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.widget.AppCompatImageView;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.RecyclerView;
+
+import ru.nifontbus.notesbook.R;
+import ru.nifontbus.notesbook.data.CardData;
+import ru.nifontbus.notesbook.data.CardsSource;
+import ru.nifontbus.notesbook.fragmentSendDataListener;
 
 public class CardAdapter
         extends RecyclerView.Adapter<CardAdapter.ViewHolder> {
@@ -130,7 +135,6 @@ public class CardAdapter
             String str = cardData.getDescription();
             str = (str.length() < 60) ? str : str.substring(0, 59) + "...";
             description.setText(str);
-            like.setChecked(cardData.isLike());
             date.setText(new SimpleDateFormat("dd-MM-yy").format(cardData.getDate()));
             image.setImageResource(cardData.getPicture());
             image.setOnClickListener(v -> {

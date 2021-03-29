@@ -1,18 +1,8 @@
-package ru.nifontbus.notesbook;
+package ru.nifontbus.notesbook.gui;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.os.Bundle;
-
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.appcompat.widget.SearchView;
-import androidx.fragment.app.Fragment;
-import androidx.recyclerview.widget.DefaultItemAnimator;
-import androidx.recyclerview.widget.DividerItemDecoration;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-
 import android.util.Log;
 import android.view.ContextMenu;
 import android.view.LayoutInflater;
@@ -23,9 +13,22 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.appcompat.widget.SearchView;
+import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.DefaultItemAnimator;
+import androidx.recyclerview.widget.DividerItemDecoration;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
 import java.util.Calendar;
 
-import ru.nifontbus.notesbook.observe.Observer;
+import ru.nifontbus.notesbook.MainActivity;
+import ru.nifontbus.notesbook.R;
+import ru.nifontbus.notesbook.data.CardData;
+import ru.nifontbus.notesbook.data.CardsSource;
+import ru.nifontbus.notesbook.data.CardsSourceFirebaseImpl;
 import ru.nifontbus.notesbook.observe.Publisher;
 
 public class TitleFragment extends Fragment {
@@ -36,6 +39,7 @@ public class TitleFragment extends Fragment {
     private CardAdapter adapter;
     private RecyclerView recyclerView;
     private Publisher publisher;
+    private int pos;
 
     // признак, что при повторном открытии фрагмента
     // (возврате из фрагмента, добавляющего запись)
@@ -76,11 +80,25 @@ public class TitleFragment extends Fragment {
                              Bundle savedInstanceState) {
 
         View view = inflater.inflate(R.layout.fragment_title, container, false);
+
+        msg(">>> GET DATA ");
+        data = new CardsSourceFirebaseImpl().init(cardsData -> adapter.notifyDataSetChanged());
         initView(view);
+        adapter.setDataSource(data);
+
         setHasOptionsMenu(true);
 
-        data = new CardsSourceFirebaseImpl().init(cardsData -> adapter.notifyDataSetChanged());
-        adapter.setDataSource(data);
+        msg(">>> MOVE TO 1st : " + moveToFirstPosition);
+        msg(">>> SIZE  : " + data.size());
+//        if (data.size() > 0) {
+            if (moveToFirstPosition) {
+                recyclerView.scrollToPosition(0);
+                moveToFirstPosition = false;
+            } else {
+                recyclerView.scrollToPosition(pos);
+                msg(">>> RESTORE POSITION = " + pos);
+            }
+//        }
 
         return view;
     }
@@ -112,12 +130,6 @@ public class TitleFragment extends Fragment {
         animator.setAddDuration(MY_DEFAULT_DURATION);
         animator.setRemoveDuration(MY_DEFAULT_DURATION);
         recyclerView.setItemAnimator(animator);
-
-        if (moveToFirstPosition && data.size() > 0) {
-            recyclerView.scrollToPosition(0);
-            moveToFirstPosition = false;
-        }
-
         adapter.SetOnItemClickListener(fragmentSendDataListener);
     }
 
@@ -158,7 +170,7 @@ public class TitleFragment extends Fragment {
 
                 int position = data.size();
                 CardData cardData = new CardData(position, "", "",
-                        false, Calendar.getInstance().getTime(), R.drawable.draw2);
+                        Calendar.getInstance().getTime(), R.drawable.draw2);
                 ((MainActivity) getActivity()).addEditFragment(cardData);
 
                 publisher.subscribe(cardDataNew -> {
@@ -210,8 +222,9 @@ public class TitleFragment extends Fragment {
                 publisher.subscribe(cardDataUpdate -> {
                     data.updateCardData(cardDataUpdate);
                     adapter.notifyItemChanged(position);
+                    pos = position;
+                    moveToFirstPosition = false;
                 });
-
                 return true;
             case R.id.action_delete:
                 data.deleteCardData(position);

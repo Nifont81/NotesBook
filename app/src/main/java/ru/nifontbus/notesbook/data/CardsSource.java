@@ -1,4 +1,4 @@
-package ru.nifontbus.notesbook;
+package ru.nifontbus.notesbook.data;
 
 public interface CardsSource {
     CardsSource init(CardsSourceResponse cardsSourceResponse);
@@ -8,5 +8,4 @@ public interface CardsSource {
     void updateCardData(CardData cardData);
     void addCardData(CardData cardData);
     void clearCardData();
-
 }
