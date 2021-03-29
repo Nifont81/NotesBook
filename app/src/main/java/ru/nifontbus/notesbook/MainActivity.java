@@ -21,11 +21,18 @@ import com.google.android.material.navigation.NavigationView;
 import java.util.Date;
 import java.util.List;
 
+import ru.nifontbus.notesbook.data.CardData;
+import ru.nifontbus.notesbook.gui.CardEditFragment;
+import ru.nifontbus.notesbook.gui.DescriptionFragment;
+import ru.nifontbus.notesbook.gui.TitleFragment;
+import ru.nifontbus.notesbook.observe.Publisher;
+
 public class MainActivity extends AppCompatActivity implements fragmentSendDataListener {
 
     private CardData currentNote;
     public static final String CURRENT_NOTE = "MainCurrentNote";
     private boolean isLandscape;
+    private Publisher publisher = new Publisher();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,7 +47,7 @@ public class MainActivity extends AppCompatActivity implements fragmentSendDataL
         if (savedInstanceState != null) {
             currentNote = savedInstanceState.getParcelable(CURRENT_NOTE);
         } else {
-            currentNote = new CardData(-1, "...", "", false,
+            currentNote = new CardData(-1, "...", "",
                     new Date(), R.drawable.draw1);
         }
 
@@ -90,18 +97,19 @@ public class MainActivity extends AppCompatActivity implements fragmentSendDataL
                 .commit();
     }
 
-    public void addEditFragment(int position) {
+    public void addEditFragment(CardData cardData) {
         // Открыть транзакцию
         int id;
         if (isLandscape) {
             getSupportFragmentManager()
                     .beginTransaction()
-                    .replace(R.id.detail_note, CardEditFragment.newInstance(position))
+                    .replace(R.id.detail_note, CardEditFragment.newInstance(cardData))
+                    .addToBackStack(null)
                     .commit();
         } else {
             getSupportFragmentManager()
                     .beginTransaction()
-                    .replace(R.id.notes_container, CardEditFragment.newInstance(position))
+                    .replace(R.id.notes_container, CardEditFragment.newInstance(cardData))
                     .addToBackStack(null)
                     .commit();
         }
@@ -169,6 +177,10 @@ public class MainActivity extends AppCompatActivity implements fragmentSendDataL
     public boolean onSupportNavigateUp() {
         onBackPressed();
         return true;
+    }
+
+    public Publisher getPublisher() {
+        return publisher;
     }
 
     private void msg(String message) {

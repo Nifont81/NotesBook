@@ -1,4 +1,4 @@
-package ru.nifontbus.notesbook;
+package ru.nifontbus.notesbook.gui;
 
 import android.icu.text.SimpleDateFormat;
 import android.os.Bundle;
@@ -14,6 +14,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import ru.nifontbus.notesbook.R;
+import ru.nifontbus.notesbook.data.CardData;
 
 public class DescriptionFragment extends Fragment {
 

@@ -8,6 +8,6 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-    tools:context=".TitleFragment">
+    tools:context=".gui.TitleFragment">
 
 </androidx.recyclerview.widget.RecyclerView>
