@@ -20,5 +20,9 @@
     <string name="navigation_drawer_close" translatable="false">Close navigation drawer</string>
     <string name="update">Update</string>
     <string name="save">Save</string>
+    <string name="exclamation">Danger!</string>
+    <string name="no">No</string>
+    <string name="yes">Yes</string>
+    <string name="delete_item">Delete Item?</string>
 
 </resources>
