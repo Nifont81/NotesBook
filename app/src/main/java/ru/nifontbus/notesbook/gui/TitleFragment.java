@@ -15,6 +15,7 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.widget.SearchView;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.DefaultItemAnimator;
@@ -40,6 +41,7 @@ public class TitleFragment extends Fragment {
     private RecyclerView recyclerView;
     private Publisher publisher;
     private int pos;
+    private MainActivity mainActivity;
 
     // признак, что при повторном открытии фрагмента
     // (возврате из фрагмента, добавляющего запись)
@@ -65,8 +67,8 @@ public class TitleFragment extends Fragment {
                     + " должен реализовывать интерфейс OnFragmentInteractionListener");
         }
 
-        MainActivity activity = (MainActivity) context;
-        publisher = activity.getPublisher();
+        mainActivity = (MainActivity) context;
+        publisher = mainActivity.getPublisher();
     }
 
     @Override
@@ -91,13 +93,13 @@ public class TitleFragment extends Fragment {
         msg(">>> MOVE TO 1st : " + moveToFirstPosition);
         msg(">>> SIZE  : " + data.size());
 //        if (data.size() > 0) {
-            if (moveToFirstPosition) {
-                recyclerView.scrollToPosition(0);
-                moveToFirstPosition = false;
-            } else {
-                recyclerView.scrollToPosition(pos);
-                msg(">>> RESTORE POSITION = " + pos);
-            }
+        if (moveToFirstPosition) {
+            recyclerView.scrollToPosition(0);
+            moveToFirstPosition = false;
+        } else {
+            recyclerView.scrollToPosition(pos);
+            msg(">>> RESTORE POSITION = " + pos);
+        }
 //        }
 
         return view;
@@ -227,11 +229,38 @@ public class TitleFragment extends Fragment {
                 });
                 return true;
             case R.id.action_delete:
-                data.deleteCardData(position);
-                adapter.notifyItemRemoved(position);
+                deleteCard(position);
                 return true;
         }
         return super.onContextItemSelected(item);
+    }
+
+    private void deleteCard(int position) {
+        // Создаём билдер и передаём контекст приложения
+        AlertDialog.Builder builder = new AlertDialog.Builder(mainActivity);
+        // В билдере указываем заголовок окна. Можно указывать как ресурс, так
+        // и строку
+        builder.setTitle(R.string.exclamation)
+                // Указываем сообщение в окне. Также есть вариант со строковым
+                // параметром
+                .setMessage(R.string.delete_item)
+                // Из этого окна нельзя выйти кнопкой Back
+                .setCancelable(false)
+                // Устанавливаем отрицательную кнопку
+                .setNegativeButton(R.string.no,
+                        // Ставим слушатель, будем обрабатывать нажатие
+                        (dialog, id) -> {
+
+                        })
+                .setPositiveButton(R.string.yes,
+                        // Ставим слушатель, будем обрабатывать нажатие
+                        (dialog, id) -> {
+                            data.deleteCardData(position);
+                            adapter.notifyItemRemoved(position);
+                        });
+
+        AlertDialog alert = builder.create();
+        alert.show();
     }
 
     private void msg(String message) {
